@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class ParkingDBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "ParkingDatabase";
     private static final String DROP_TABLE_IF_EXISTS= "DROP TABLE IF EXISTS ";
 

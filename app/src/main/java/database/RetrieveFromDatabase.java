@@ -20,6 +20,8 @@ public class RetrieveFromDatabase {
             ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE,
             ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME,
             ParkingLocationDBContract.ParkingLocation.COLUMN_AREA,
+            ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED,
+            ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED_NO,
             ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE
     };
 
@@ -102,8 +104,11 @@ public class RetrieveFromDatabase {
         parkingPositionObj.setArea(
                 cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
         );
-        parkingPositionObj.setDatetime(
-                cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
+         parkingPositionObj.setAddress_parked(
+                 cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED))
+         );
+        parkingPositionObj.setParked_address_no(
+                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED_NO))
         );
          parkingPositionObj.setVehicle(
                  cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE))

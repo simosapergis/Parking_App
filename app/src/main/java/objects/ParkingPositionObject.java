@@ -3,6 +3,8 @@ package objects;
 public class ParkingPositionObject {
     private String username;
     private String area;
+    private String parked_address;
+    private String parked_address_no;
     private Double latitude;
     private Double longitude;
     private Long datetime;
@@ -49,7 +51,20 @@ public class ParkingPositionObject {
         this.datetime = datetime;
     }
 
+    public String getParked_address() {
+        return parked_address;
+    }
 
+    public void setAddress_parked(String parked_address) {
+        this.parked_address = parked_address;
+    }
+    public String getParked_address_no() {
+        return parked_address_no;
+    }
+
+    public void setParked_address_no(String parked_address_no) {
+        this.parked_address_no = parked_address_no;
+    }
     public String getVehicle() {
         return vehicle;
     }
@@ -57,7 +72,6 @@ public class ParkingPositionObject {
     public void setVehicle(String vehicle) {
         this.vehicle = vehicle;
     }
-
     public String toString(){
         return "Username : "+username+" ,Vehicle : "+vehicle+" ,Logitude : "+longitude+" ,Latitude : "+latitude+" ,Area: "+area+" ,Datetime : "+datetime;
     }

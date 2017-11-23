@@ -122,7 +122,7 @@ public class SetupConfigActivity extends AppCompatActivity {
                if(view == null){
                    view = mInflator.inflate(R.layout.spinner_layout, null);
                    text = (TextView)view.findViewById(R.id.spinnerTarget);
-                   if(!sharedPreferences.getBoolean(Helper.PREF_EXISTS,false)){
+                   if(!sharedPreferences.getBoolean(Helper.PREF_EXISTS,false ) && !selected){
                        text.setText(data[count]);
                    }else{
                        text.setText(data[position]);
@@ -165,6 +165,7 @@ public class SetupConfigActivity extends AppCompatActivity {
         private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                selected = true;
                 ((BaseAdapter)spinnerAdapter).notifyDataSetChanged();
                 return false;
             }

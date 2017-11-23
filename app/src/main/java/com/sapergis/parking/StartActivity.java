@@ -82,6 +82,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     @Override
     protected void onResume() {
         super.onResume();
+        checkPermissions();
         if(!sharedPreferences.contains(Helper.PREF_EXISTS)){
             setUpPreferences();
         }else{
@@ -242,6 +243,8 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         List<Address> addressesList = null;
         Address address = null;
         String area = null;
+        String parked_address = null;
+        String parked_address_no = null;
         Geocoder geocoder = new Geocoder(getBaseContext(), locale);
         long datetime = Calendar.getInstance().getTimeInMillis();
         try{
@@ -251,11 +254,15 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
             ex.printStackTrace();
         }
         area = (address == null ? "N/A" :  address.getLocality());
+        parked_address = (address == null ? "N/A" :  address.getThoroughfare());
+        parked_address_no = (address == null ? "N/A" :  address.getSubThoroughfare());
         ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
         parkingPositionObj.setUsername(current_username);
         parkingPositionObj.setLatitude(location.getLatitude());
         parkingPositionObj.setLongitude(location.getLongitude());
         parkingPositionObj.setArea(area);
+        parkingPositionObj.setAddress_parked(parked_address);
+        parkingPositionObj.setParked_address_no(parked_address_no);
         parkingPositionObj.setDatetime(datetime);
         Log.d(Helper.TAG , "datetime -> "+datetime +" area -> "+ area);
         parkedLocation = location;
