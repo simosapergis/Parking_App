@@ -1,0 +1,41 @@
+<resources>
+    <!--Generic -->
+    <string name="app_name">Parking Application</string>
+    <string name="done">Done</string>
+    <string name="en_US">en_US</string>
+    <string name="el_GR">el_GR</string>
+
+    <!--Toast-->
+    <string name="position_saved">Your position has been saved</string>
+    <string name="position_deleted">Your position has been deleted</string>
+    <string name="error_on_getting_gps_last_loc">Error trying to get last GPS location</string>
+
+    <!--Setup config -->
+    <string name="username_hint">Username</string>
+    <string name="please_enter_username">Please enter a username</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="store_parking_records">Store parking record</string>
+    <string name="select_vehicle">Select vehicle</string>
+    <string-array name="vehicles_list">
+        <item>Car</item>
+        <item>Bike</item>
+        <item>Long Vehicle</item>
+        <item>Enter</item>
+        <item>Select vehicle</item>
+    </string-array>
+
+    <!--StartActivity-->
+    <string name="distance_from_vehicle">Distance from your vehicle: </string>
+    <string name="parking_button">Parking Button</string>
+
+    <!--Alert dialog -->
+    <string name="welcome_text">Welcome to Parking app! Please set up your preferences</string>
+    <string name="OK">OK</string>
+
+    <!--Parking Dialog-->
+    <string name="release_parking_position">Are you sure you want to release your parking position?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_activity_parking_statistics">ParkingStatistics</string>
+
+</resources>

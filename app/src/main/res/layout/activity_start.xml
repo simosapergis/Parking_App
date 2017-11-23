@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_start"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sapergis.parking.StartActivity">
+
+    <ImageButton
+        android:id="@+id/getParkingPos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="157dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:contentDescription="@string/parking_button"
+        />
+
+    <Button
+        android:id="@+id/configBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Config"
+        />
+
+    <Button
+        android:id="@+id/statsBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stats"
+        android:layout_toEndOf="@id/configBtn"
+        android:layout_toRightOf="@+id/configBtn"
+        />
+
+    <TextView
+        android:id="@+id/distance_text"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/configBtn"
+        android:layout_centerHorizontal="true"
+        android:text="@string/distance_from_vehicle"
+        />
+
+    <TextView
+        android:id="@+id/distance_text2"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/distance_text"
+        android:layout_toRightOf="@+id/distance_text"
+        android:layout_below="@+id/configBtn"
+
+        />
+</RelativeLayout>
