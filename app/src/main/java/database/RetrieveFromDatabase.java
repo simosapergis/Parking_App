@@ -101,6 +101,9 @@ public class RetrieveFromDatabase {
         parkingPositionObj.setLatitude(
                 cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE))
         );
+         parkingPositionObj.setDatetime(
+                 cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
+         );
         parkingPositionObj.setArea(
                 cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
         );

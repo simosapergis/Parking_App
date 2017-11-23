@@ -32,7 +32,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,13 +71,14 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     private final String NULL_USERNAME = "nullUsername";
     SharedPreferences sharedPreferences;
     private Location parkedLocation = null;
+    private LocationCallback mLocationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        initiateLocationUpdates();
+        setUpLocationClient();
         setUpViews();
         sharedPreferences = getSharedPreferences(Helper.PREF_NAME, 0);
         Log.d(Helper.TAG , "Contains? "+(sharedPreferences.contains(Helper.PREF_EXISTS)));
@@ -82,42 +87,58 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     @Override
     protected void onResume() {
         super.onResume();
-        checkPermissions();
         if(!sharedPreferences.contains(Helper.PREF_EXISTS)){
             setUpPreferences();
         }else{
             current_username = sharedPreferences.getString(Helper.PREF_USERNAME , NULL_USERNAME);
+            checkPermissions();
+            startLocationUpdates();
         }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mFusedLocationClient!=null && mLocationCallback!=null){
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+
+
     }
 
     /**
      * method to register for location updates
      */
-    protected void initiateLocationUpdates() {
+    protected void setUpLocationClient() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         //mLocationRequest.setSmallestDisplacement(LESS_AMOUNT_OF_METERS);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+    }
 
+    /**
+     * method to start location updates
+     */
+    protected void startLocationUpdates(){
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(Helper.TAG, "checkSelfPermission");
             return;
         }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
+        mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                onLocationChanged(locationResult.getLastLocation());
+            }
+        };
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
     }
 
     /**
@@ -169,15 +190,14 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
      */
     private void setUpPreferences(){
         Intent preferencesIntent = new Intent(StartActivity.this, SetupConfigActivity.class);
-        startActivity(preferencesIntent);
+        startActivityForResult(preferencesIntent , REQUEST_PREFERENCES_SETUP);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       // if(requestCode == REQUEST_PREFERENCES_SETUP && resultCode==RESULT_OK){
-            //Intent resultIntent = getIntent();
-            //resultIntent.getStringExtra(")
-        //}
+        if(requestCode == REQUEST_PREFERENCES_SETUP && resultCode==RESULT_OK) {
+            checkPermissions();
+        }
     }
 
     /**
@@ -195,6 +215,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                     StoreToDatabase.storePosition(parkingPositionObject , writableDatabase);
                 }
                 DeleteFromDatabase.deleteTempPosition(this);
+                Toast.makeText(this, R.string.parking_pos_record_stored_, Toast.LENGTH_LONG).show();
                 closeWritableDatabase(writableDatabase);
                 vehicleParked = false;
             }else{
@@ -246,16 +267,17 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         String parked_address = null;
         String parked_address_no = null;
         Geocoder geocoder = new Geocoder(getBaseContext(), locale);
-        long datetime = Calendar.getInstance().getTimeInMillis();
+        Calendar calendar = Calendar.getInstance();
+        long datetime = calendar.getTimeInMillis();
         try{
            addressesList = geocoder.getFromLocation(location.getLatitude() , location.getLongitude() , maxresults);
            address = addressesList.get(0);
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        area = (address == null ? "N/A" :  address.getLocality());
-        parked_address = (address == null ? "N/A" :  address.getThoroughfare());
-        parked_address_no = (address == null ? "N/A" :  address.getSubThoroughfare());
+        area = (address == null ? Helper.N_A :  address.getLocality());
+        parked_address = (address == null ? Helper.N_A :  address.getThoroughfare());
+        parked_address_no = (address == null ? Helper.N_A :  address.getSubThoroughfare());
         ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
         parkingPositionObj.setUsername(current_username);
         parkingPositionObj.setLatitude(location.getLatitude());
@@ -264,7 +286,8 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         parkingPositionObj.setAddress_parked(parked_address);
         parkingPositionObj.setParked_address_no(parked_address_no);
         parkingPositionObj.setDatetime(datetime);
-        Log.d(Helper.TAG , "datetime -> "+datetime +" area -> "+ area);
+        parkingPositionObj.setVehicle(sharedPreferences.getString(Helper.PREF_VEHICLE, null));
+        Log.d(Helper.TAG , "datetime -> "+datetime +" area -> "+ area +" address -> "+parked_address +" no-> "+parked_address_no);
         parkedLocation = location;
         SQLiteDatabase writableDatabase = openWritableDatabase();
         StoreToDatabase.storeTempPosition(parkingPositionObj , writableDatabase);
@@ -288,6 +311,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
             distance_text2.setText(String.valueOf(distanceFromVehicle));
             Log.d(Helper.TAG , "Distance from your vehicle -> "+distanceFromVehicle);
         }
+
     }
 
     /**
@@ -314,6 +338,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     public void releaseParkingLocation(boolean release) {
         if(release){
             DeleteFromDatabase.deleteTempPosition(getBaseContext());
+            Toast.makeText(this, R.string.parking_pos_released, Toast.LENGTH_LONG).show();
             vehicleParked = false;
         }
     }

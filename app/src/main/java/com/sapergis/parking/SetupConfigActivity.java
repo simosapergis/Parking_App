@@ -1,6 +1,8 @@
 package com.sapergis.parking;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +24,6 @@ import android.widget.Toast;
 import helperClasses.Helper;
 
 public class SetupConfigActivity extends AppCompatActivity {
-
 
     private TextInputEditText username;
     private Spinner vehicle_spinner;
@@ -100,6 +101,8 @@ public class SetupConfigActivity extends AppCompatActivity {
             Log.d(Helper.TAG , "Username = "+sharedPreferences.getString("username","isNuLL"));
             Log.d(Helper.TAG , "Vehile = "+sharedPreferences.getString("vehicle","isNuLL"));
             Log.d(Helper.TAG , "isChecked = "+sharedPreferences.getBoolean("allowParkingEntries", false));
+            Intent intent = new Intent();
+            setResult(Activity.RESULT_OK, intent);
             finish();
         }
         else{

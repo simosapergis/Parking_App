@@ -8,6 +8,8 @@
     <!--Toast-->
     <string name="position_saved">Your position has been saved</string>
     <string name="position_deleted">Your position has been deleted</string>
+    <string name="parking_pos_record_stored_">Your last parking position record has been stored!</string>
+    <string name="parking_pos_released">Your last parking position has been released</string>
     <string name="error_on_getting_gps_last_loc">Error trying to get last GPS location</string>
 
     <!--Setup config -->

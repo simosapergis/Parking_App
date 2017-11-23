@@ -13,6 +13,6 @@ public class DeleteFromDatabase {
         database.delete(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME,
                         null,
                         null  );
-        Toast.makeText(context, R.string.position_deleted, Toast.LENGTH_LONG).show();
+
     }
 }
