@@ -38,4 +38,7 @@
     <string name="no">No</string>
     <string name="title_activity_parking_statistics">ParkingStatistics</string>
 
+    <!--ParkingStatistics-->
+    <string name="parked_at"> parked at </string>
+
 </resources>

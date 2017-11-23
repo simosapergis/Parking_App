@@ -7,6 +7,8 @@ public class ParkingPositionObject {
     private Double longitude;
     private Long datetime;
 
+    private String vehicle;
+
     public String getUsername() {
         return username;
     }
@@ -47,7 +49,16 @@ public class ParkingPositionObject {
         this.datetime = datetime;
     }
 
+
+    public String getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(String vehicle) {
+        this.vehicle = vehicle;
+    }
+
     public String toString(){
-        return "Username : "+username+" ,Logitude : "+longitude+" ,Latitude : "+latitude+" ,Area: "+area+" ,Datetime : "+datetime;
+        return "Username : "+username+" ,Vehicle : "+vehicle+" ,Logitude : "+longitude+" ,Latitude : "+latitude+" ,Area: "+area+" ,Datetime : "+datetime;
     }
 }

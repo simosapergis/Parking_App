@@ -24,6 +24,7 @@ public class StoreToDatabase {
     values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE , ppo.getLongitude());
     values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME , ppo.getDatetime());
     values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA , ppo.getArea());
+    values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE , ppo.getVehicle());
     database.insert(ParkingLocationDBContract.ParkingLocation.TABLE_NAME , null, values);
   }
 
@@ -36,6 +37,7 @@ public class StoreToDatabase {
     values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_LONGITUDE , ppo.getLongitude());
     values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_DATETIME , ppo.getDatetime());
     values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_AREA , ppo.getArea());
+    values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_VEHICLE , ppo.getVehicle());
     database.insert(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME , null, values);
   }
 

@@ -19,11 +19,12 @@ public class RetrieveFromDatabase {
             ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE,
             ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE,
             ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME,
-            ParkingLocationDBContract.ParkingLocation.COLUMN_AREA
+            ParkingLocationDBContract.ParkingLocation.COLUMN_AREA,
+            ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE
     };
 
     public static  ParkingPositionObject retrievePosition(SQLiteDatabase readableDatabase , String userName){
-        ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
+        ParkingPositionObject parkingPositionObj;
 
         String selection = ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME +"=?";
         String [] selectionArgs = {userName};
@@ -38,27 +39,13 @@ public class RetrieveFromDatabase {
         );
 
         cursor.moveToFirst();
-        parkingPositionObj.setUsername(
-                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME))
-        );
-        parkingPositionObj.setLongitude(
-                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE))
-        );
-        parkingPositionObj.setLatitude(
-                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE))
-        );
-        parkingPositionObj.setArea(
-                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
-        );
-        parkingPositionObj.setDatetime(
-                cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
-        );
+        parkingPositionObj=fetchObject(cursor);
         cursor.close();
         return parkingPositionObj;
     }
 
     public static ParkingPositionObject retrieveTempPosition(SQLiteDatabase readableDatabase , String userName){
-        ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
+        ParkingPositionObject parkingPositionObj;
         String selection = ParkingLocationDBContract.TempParkingLocation.COLUMN_USERNAME +" = ?";
         String [] selectionArgs = {userName};
         Cursor cursor = readableDatabase.query(
@@ -72,21 +59,7 @@ public class RetrieveFromDatabase {
         );
 
         cursor.moveToFirst();
-        parkingPositionObj.setUsername(
-                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME))
-        );
-        parkingPositionObj.setLongitude(
-                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE))
-        );
-        parkingPositionObj.setLatitude(
-                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE))
-        );
-        parkingPositionObj.setArea(
-                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
-        );
-        parkingPositionObj.setDatetime(
-                cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
-        );
+        parkingPositionObj = fetchObject(cursor);
         cursor.close();
         return parkingPositionObj;
     }
@@ -107,27 +80,35 @@ public class RetrieveFromDatabase {
 
         cursor.moveToFirst();
         while(cursor.moveToNext()){
-            ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
-            parkingPositionObj.setUsername(
-                    cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME))
-            );
-            parkingPositionObj.setLongitude(
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE))
-            );
-            parkingPositionObj.setLatitude(
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE))
-            );
-            parkingPositionObj.setArea(
-                    cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
-            );
-            parkingPositionObj.setDatetime(
-                    cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
-            );
-            entries.add(parkingPositionObj);
+            entries.add(fetchObject(cursor));
         }
 
         cursor.close();
         return entries;
+    }
+
+     private static ParkingPositionObject fetchObject(Cursor cursor){
+        ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
+
+        parkingPositionObj.setUsername(
+                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME))
+        );
+        parkingPositionObj.setLongitude(
+                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE))
+        );
+        parkingPositionObj.setLatitude(
+                cursor.getDouble(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE))
+        );
+        parkingPositionObj.setArea(
+                cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA))
+        );
+        parkingPositionObj.setDatetime(
+                cursor.getLong(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_DATETIME))
+        );
+         parkingPositionObj.setVehicle(
+                 cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE))
+         );
+        return parkingPositionObj;
     }
 
 }

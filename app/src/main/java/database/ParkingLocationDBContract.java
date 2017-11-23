@@ -14,6 +14,7 @@ public final class ParkingLocationDBContract {
         public static final String COLUMN_LONGITUDE = "longitude";
         public static final String COLUMN_DATETIME = "datetime";
         public static final String COLUMN_AREA  = "area";
+        public static final String COLUMN_VEHICLE  = "vehicle";
 
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME +" ( " +
@@ -22,7 +23,8 @@ public final class ParkingLocationDBContract {
                 COLUMN_LATITUDE + " REAL, "+
                 COLUMN_LONGITUDE + " REAL, "+
                 COLUMN_DATETIME + " INTEGER, "+
-                COLUMN_AREA + " TEXT " + " )";
+                COLUMN_AREA + " TEXT, " +
+                COLUMN_VEHICLE +" TEXT )";
     }
 
     public static class TempParkingLocation implements BaseColumns{
@@ -32,6 +34,7 @@ public final class ParkingLocationDBContract {
         public static final String COLUMN_LONGITUDE = "longitude";
         public static final String COLUMN_DATETIME = "datetime";
         public static final String COLUMN_AREA  = "area";
+        public static final String COLUMN_VEHICLE  = "vehicle";
 
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME +" ( " +
@@ -40,7 +43,8 @@ public final class ParkingLocationDBContract {
                 COLUMN_LATITUDE + " REAL, "+
                 COLUMN_LONGITUDE + " REAL, "+
                 COLUMN_DATETIME + " INTEGER, "+
-                COLUMN_AREA + " TEXT " + " )";
+                COLUMN_AREA + " TEXT, " +
+                COLUMN_VEHICLE +" TEXT )";
     }
 
 
