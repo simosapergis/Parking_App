@@ -10,6 +10,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -61,9 +64,9 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
-    private ImageButton getParkingPos;
+    private FloatingActionButton getParkingPos;
     private Button config;
-    private Button stats;
+    private FloatingActionButton stats;
     private TextView distance_text1;
     private TextView distance_text2;
     private boolean vehicleParked;
@@ -145,7 +148,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
      *method to set up the UI elements of the activity
      */
     private void setUpViews(){
-        getParkingPos = (ImageButton) findViewById(R.id.getParkingPos);
+        getParkingPos = (FloatingActionButton) findViewById(R.id.getParkingPosBtn);
         getParkingPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,13 +158,16 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         getParkingPos.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ParkingDialog parkingDialog = new ParkingDialog();
-                parkingDialog.show(StartActivity.this,
-                        getResources().getString(R.string.release_parking_position),
-                        getResources().getString(R.string.yes),
-                        getResources().getString(R.string.no));
-                Log.d(Helper.TAG , "LONG CLICKED");
-                return true;
+                if(vehicleParked){
+                    ParkingDialog parkingDialog = new ParkingDialog();
+                    parkingDialog.show(StartActivity.this,
+                            getResources().getString(R.string.release_parking_position),
+                            getResources().getString(R.string.yes),
+                            getResources().getString(R.string.no));
+                    Log.d(Helper.TAG , "LONG CLICKED");
+                    return true;
+                }
+                return false;
             }
         });
         config = (Button) findViewById(R.id.configBtn);
@@ -172,7 +178,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                 startActivity(intent);
             }
         });
-        stats = (Button)findViewById(R.id.statsBtn);
+        stats = (FloatingActionButton) findViewById(R.id.statsBtn);
         stats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -292,6 +298,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         SQLiteDatabase writableDatabase = openWritableDatabase();
         StoreToDatabase.storeTempPosition(parkingPositionObj , writableDatabase);
         closeWritableDatabase(writableDatabase);
+
     }
 
     /**

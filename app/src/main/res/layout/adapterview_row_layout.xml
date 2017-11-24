@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textSize="@dimen/large_text"
-        android:text="11-22-2344"
+
         />
     <TextView
         android:id="@+id/text_time"
@@ -48,6 +48,6 @@
         android:textAlignment="center"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:textSize="@dimen/medium_text"
-        android:text="Agios Dimitrios"
+
         />
 </RelativeLayout>
