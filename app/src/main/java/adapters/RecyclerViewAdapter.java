@@ -53,8 +53,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.area.setText(ppo.getArea());
         holder.address.setText(addressText);
 
-      //  holder.
-        //TODO holder.time.setText("time");
     }
 
     private String formatAddressText(ParkingPositionObject ppo , MyViewHolder holder){

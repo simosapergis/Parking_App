@@ -42,5 +42,7 @@
 
     <!--ParkingStatistics-->
     <string name="parked_at"> parked at </string>
+    <string name="tab_overall">Overall</string>
+    <string name="tab_statistics">Statistics</string>
 
 </resources>

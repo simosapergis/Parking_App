@@ -4,16 +4,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.sapergis.parking.ParkingStatistics;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import objects.ParkingPositionObject;
+import objects.ParkingStatisticsObject;
 
 public class RetrieveFromDatabase {
     private RetrieveFromDatabase(){
 
     }
-
+    private int counter = 0;
     private static final String [] columnsToRetrieve = {
             ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME,
             ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE,
@@ -81,12 +84,42 @@ public class RetrieveFromDatabase {
         );
 
         cursor.moveToFirst();
-        while(cursor.moveToNext()){
+        int counter = 0;
+        int count =cursor.getCount();
+        while(counter < count){
             entries.add(fetchObject(cursor));
+            counter++;
+            cursor.moveToNext();
         }
 
         cursor.close();
         return entries;
+    }
+
+    public static List<String> retrieveStatistics (SQLiteDatabase readableDatabase , String userName) {
+        ArrayList<String> statistics = new ArrayList<>();
+        String selection = ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME + " = ?";
+        String[] column = {ParkingLocationDBContract.ParkingLocation.COLUMN_AREA};
+        String statisticsRawQuery= "SELECT DISTINCT "+column[0]+" FROM "+ParkingLocationDBContract.ParkingLocation.TABLE_NAME+" ";
+        String[] selectionArgs = {userName};
+       Cursor cursor = readableDatabase.rawQuery( statisticsRawQuery, null);
+        /*
+       Cursor cursor = readableDatabase.query(
+                true,
+                ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
+                columnsToRetrieve, null, null, columnsToRetrieve[4], null, null, null
+        );
+        */
+        cursor.moveToFirst();
+        int counter = 0;
+        int count =cursor.getCount();
+        while (counter < count) {
+            statistics.add(cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_AREA)));
+            counter++;
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return statistics;
     }
 
      private static ParkingPositionObject fetchObject(Cursor cursor){
