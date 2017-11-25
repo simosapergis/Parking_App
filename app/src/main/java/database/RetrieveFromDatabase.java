@@ -18,6 +18,7 @@ public class RetrieveFromDatabase {
     }
     private int counter = 0;
     private static final String [] columnsToRetrieve = {
+            ParkingLocationDBContract.ParkingLocation._ID,
             ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME,
             ParkingLocationDBContract.ParkingLocation.COLUMN_LONGITUDE,
             ParkingLocationDBContract.ParkingLocation.COLUMN_LATITUDE,
@@ -100,16 +101,16 @@ public class RetrieveFromDatabase {
         ArrayList<String> statistics = new ArrayList<>();
         String selection = ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME + " = ?";
         String[] column = {ParkingLocationDBContract.ParkingLocation.COLUMN_AREA};
-        String statisticsRawQuery= "SELECT DISTINCT "+column[0]+" FROM "+ParkingLocationDBContract.ParkingLocation.TABLE_NAME+" ";
+        //String statisticsRawQuery= "SELECT DISTINCT "+column[0]+" FROM "+ParkingLocationDBContract.ParkingLocation.TABLE_NAME+" ";
         String[] selectionArgs = {userName};
-       Cursor cursor = readableDatabase.rawQuery( statisticsRawQuery, null);
-        /*
+       //Cursor cursor = readableDatabase.rawQuery( statisticsRawQuery, null);
+
        Cursor cursor = readableDatabase.query(
                 true,
                 ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
-                columnsToRetrieve, null, null, columnsToRetrieve[4], null, null, null
+                columnsToRetrieve, selection, selectionArgs, columnsToRetrieve[4], null, null, null
         );
-        */
+
         cursor.moveToFirst();
         int counter = 0;
         int count =cursor.getCount();
@@ -125,6 +126,9 @@ public class RetrieveFromDatabase {
      private static ParkingPositionObject fetchObject(Cursor cursor){
         ParkingPositionObject parkingPositionObj = new ParkingPositionObject();
 
+        parkingPositionObj.setId(
+                cursor.getInt(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation._ID))
+        );
         parkingPositionObj.setUsername(
                 cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME))
         );
@@ -149,6 +153,7 @@ public class RetrieveFromDatabase {
          parkingPositionObj.setVehicle(
                  cursor.getString(cursor.getColumnIndexOrThrow(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE))
          );
+
         return parkingPositionObj;
     }
 

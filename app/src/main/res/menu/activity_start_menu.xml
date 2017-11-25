@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+    android:id="@+id/goToSettings"
+    android:title="@string/go_to_settings"
+        />
+
+    <item
+        android:id="@+id/add_data"
+        android:title="@string/add_data"
+        />
+</menu>

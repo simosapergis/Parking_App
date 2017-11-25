@@ -1,6 +1,8 @@
 package objects;
 
 public class ParkingPositionObject {
+
+    private int id;
     private String username;
     private String area;
     private String parked_address;
@@ -8,6 +10,14 @@ public class ParkingPositionObject {
     private Double latitude;
     private Double longitude;
     private Long datetime;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     private String vehicle;
 

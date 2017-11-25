@@ -11,15 +11,15 @@ import android.location.Location;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,16 +30,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +42,7 @@ import database.DeleteFromDatabase;
 import database.ParkingDBHelper;
 import database.RetrieveFromDatabase;
 import database.StoreToDatabase;
+import helperClasses.FireBaseTestData;
 import helperClasses.Helper;
 import interfaces.ParkingDialogInterface;
 import objects.ParkingPositionObject;
@@ -125,6 +120,27 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_start_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.goToSettings:
+                Intent intent = new Intent(StartActivity.this, SetupConfigActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.add_data:
+                retrieveFromFirebase();
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -226,7 +242,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                 vehicleParked = false;
             }else{
                 getParkingLocation();
-                vehicleParked = true;
+
             }
         }catch (Exception ex){
             ex.printStackTrace();
@@ -298,7 +314,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         SQLiteDatabase writableDatabase = openWritableDatabase();
         StoreToDatabase.storeTempPosition(parkingPositionObj , writableDatabase);
         closeWritableDatabase(writableDatabase);
-
+        vehicleParked = true;
     }
 
     /**
@@ -307,7 +323,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     private void onLocationChanged(Location location){
         Float distanceFromVehicle = null;
         Log.d(Helper.TAG,"Location Changed To -> lat:"+ location.getLatitude()+ " lon:"+ location.getLongitude() +" acc:"+ location.getAccuracy());
-        LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
+        //LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
         if(vehicleParked){
             if( ! (distance_text1.getVisibility()== View.VISIBLE  && distance_text2.getVisibility() == View.VISIBLE) ){
                 //TODO need UI change
@@ -366,5 +382,21 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
 
     private void closeWritableDatabase(SQLiteDatabase writableDatabase){
         writableDatabase.close();
+    }
+
+    private void retrieveFromFirebase(){
+        FireBaseTestData testDataList = new FireBaseTestData(this);
+        testDataList.requestTestListFromFireBase();
+    }
+
+    /**
+     * method to upload parking location enties for testing
+     */
+    private void uploadToFirebase(){
+        List<ParkingPositionObject> entries = null;
+        SQLiteDatabase readabledatabase = new ParkingDBHelper(this).getReadableDatabase();
+        entries = RetrieveFromDatabase.retrieveAllEntries(readabledatabase, current_username);
+        FireBaseTestData testDataList = new FireBaseTestData(this);
+        testDataList.postTestListToFireBase(entries);
     }
 }

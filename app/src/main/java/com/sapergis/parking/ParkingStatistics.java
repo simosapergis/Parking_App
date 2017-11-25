@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-
 import java.util.List;
 
 import adapters.MyPagerAdapter;
@@ -55,12 +53,7 @@ public class ParkingStatistics extends AppCompatActivity implements ParkingEntri
 
             }
         });
-        /*
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        */
+
     }
 
     @Override
@@ -73,10 +66,7 @@ public class ParkingStatistics extends AppCompatActivity implements ParkingEntri
     private void  loadFromDb() {
         SQLiteDatabase readableDatabase = new ParkingDBHelper(this).getWritableDatabase();
         parkingEntriesList = RetrieveFromDatabase.retrieveAllEntries(readableDatabase , current_username);
-
-        readableDatabase.close();
-        SQLiteDatabase readableDatabase2 = new ParkingDBHelper(this).getWritableDatabase();
-        parkingStatisticsList = RetrieveFromDatabase.retrieveStatistics(readableDatabase2, current_username);
+        parkingStatisticsList = RetrieveFromDatabase.retrieveStatistics(readableDatabase, current_username);
         readableDatabase.close();
     }
     
@@ -89,14 +79,6 @@ public class ParkingStatistics extends AppCompatActivity implements ParkingEntri
     public List<ParkingStatistics> parkingStatisticsList() {
         return null;
     }
-    /*
-    private void initiateListComponents() {
-        adapter = new RecyclerViewAdapter(parkingEntriesList);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-    */
 
 
 }
