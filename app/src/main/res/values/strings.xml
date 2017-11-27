@@ -1,6 +1,7 @@
 <resources>
     <!--Generic -->
     <string name="app_name">Parking Application</string>
+    <string name="google_maps_key"> AIzaSyAJVRO1um1UAqCC6J3PRce2vyaYpbaTkj0 </string>
     <string name="done">Done</string>
     <string name="en_US">en_US</string>
     <string name="el_GR">el_GR</string>
@@ -8,7 +9,7 @@
     <!--Toast-->
     <string name="position_saved">Your position has been saved</string>
     <string name="position_deleted">Your position has been deleted</string>
-    <string name="parking_pos_record_stored_">Your last parking position record has been stored!</string>
+    <string name="parked_vehicle_reached">Parked vehicle reached! Drive safe</string>
     <string name="parking_pos_released">Your last parking position has been released</string>
     <string name="error_on_getting_gps_last_loc">Error trying to get last GPS location</string>
     <string name="error_reading_from_firebase">Failed to read from Firebase Database</string>
@@ -30,6 +31,9 @@
     <!--StartActivity-->
     <string name="distance_from_vehicle">Distance from your vehicle: </string>
     <string name="parking_button">Parking Button</string>
+    <string name="vehicle_parked">Vehicle parked! Parking position stored</string>
+    <string name="parked_vehicle_marker">Your parked vehicle</string>
+    <string name="your_location">Your location</string>
 
     <!--Alert dialog -->
     <string name="welcome_text">Welcome to Parking app! Please set up your preferences</string>
@@ -48,5 +52,5 @@
 
     <!--Menu-->
     <string name="go_to_settings">Settings</string>
-    <string name="add_data">Add Data</string>
+    <string name="add_data">Add Test Data</string>
 </resources>

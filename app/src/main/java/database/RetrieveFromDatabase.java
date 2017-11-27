@@ -1,16 +1,12 @@
 package database;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import com.sapergis.parking.ParkingStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import objects.ParkingPositionObject;
-import objects.ParkingStatisticsObject;
 
 public class RetrieveFromDatabase {
     private RetrieveFromDatabase(){
@@ -108,7 +104,7 @@ public class RetrieveFromDatabase {
        Cursor cursor = readableDatabase.query(
                 true,
                 ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
-                columnsToRetrieve, selection, selectionArgs, columnsToRetrieve[4], null, null, null
+                columnsToRetrieve, selection, selectionArgs, ParkingLocationDBContract.ParkingLocation.COLUMN_AREA, null, null, null
         );
 
         cursor.moveToFirst();

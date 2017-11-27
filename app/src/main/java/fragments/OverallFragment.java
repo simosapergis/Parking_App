@@ -13,12 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sapergis.parking.ParkingStatistics;
+import com.sapergis.parking.ParkingStatisticsActivity;
 import com.sapergis.parking.R;
 
 import java.util.List;
 
-import adapters.RecyclerViewAdapter;
+import adapters.OverallRecyclerViewAdapter;
 import interfaces.ParkingEntriesInterface;
 import objects.ParkingPositionObject;
 
@@ -49,15 +49,15 @@ public class OverallFragment extends Fragment{
 
 
     private void initiateListComponents() {
-        activity =((ParkingStatistics) getActivity());
+        activity =((ParkingStatisticsActivity) getActivity());
         ParkingEntriesInterface getList =(ParkingEntriesInterface) activity;
         try {
             parkingEntriesList = getList.parkingEntriesList();
         }catch (NullPointerException nex){
             nex.printStackTrace();
         }
-        RecyclerViewAdapter adapter;
-        adapter = new RecyclerViewAdapter(parkingEntriesList);
+        OverallRecyclerViewAdapter adapter;
+        adapter = new OverallRecyclerViewAdapter(parkingEntriesList);
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();

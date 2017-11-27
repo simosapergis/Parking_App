@@ -18,7 +18,7 @@ import helperClasses.Helper;
 import objects.ParkingPositionObject;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class OverallRecyclerViewAdapter extends RecyclerView.Adapter<OverallRecyclerViewAdapter.MyViewHolder> {
     private List <ParkingPositionObject> ppList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -31,14 +31,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             area =(TextView)view.findViewById(R.id.text_area);
         }
     }
-    public RecyclerViewAdapter(List<ParkingPositionObject> list){
+    public OverallRecyclerViewAdapter(List<ParkingPositionObject> list){
         this.ppList = list;
     }
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapterview_row_layout, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.overall_row_layout, parent,false);
         return new MyViewHolder(view);
     }
 

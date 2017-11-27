@@ -8,18 +8,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import java.util.List;
 
+
 import adapters.MyPagerAdapter;
-import adapters.RecyclerViewAdapter;
 import database.ParkingDBHelper;
 import database.RetrieveFromDatabase;
 import helperClasses.Helper;
 import interfaces.ParkingEntriesInterface;
 import objects.ParkingPositionObject;
 
-public class ParkingStatistics extends AppCompatActivity implements ParkingEntriesInterface {
+public class ParkingStatisticsActivity extends AppCompatActivity implements ParkingEntriesInterface {
 
     List<ParkingPositionObject> parkingEntriesList;
-    List<String> parkingStatisticsList;
+    List<String> parkingDistinctValuesList;
+    double [] areasPercentages;
     private String current_username;
 
     @Override
@@ -66,8 +67,28 @@ public class ParkingStatistics extends AppCompatActivity implements ParkingEntri
     private void  loadFromDb() {
         SQLiteDatabase readableDatabase = new ParkingDBHelper(this).getWritableDatabase();
         parkingEntriesList = RetrieveFromDatabase.retrieveAllEntries(readableDatabase , current_username);
-        parkingStatisticsList = RetrieveFromDatabase.retrieveStatistics(readableDatabase, current_username);
+        parkingDistinctValuesList = RetrieveFromDatabase.retrieveStatistics(readableDatabase, current_username);
+        calculateStatistics(parkingEntriesList,  parkingDistinctValuesList);
         readableDatabase.close();
+    }
+
+    private void calculateStatistics(List<ParkingPositionObject> ppoList, List <String> pdvList){
+        final int pdvSize = pdvList.size();
+        final int ppoSize = ppoList.size();
+        final int percentage = 100;
+        int [] areaCount  = new int[pdvSize];
+        areasPercentages = new double[pdvSize];
+        for(int i=0; i<pdvList.size(); i++) {
+                for (int j = 0; j < ppoList.size(); j++) {
+                    if( pdvList.get(i).equalsIgnoreCase(ppoList.get(j).getArea()) ){
+                            areaCount[i]+=1;
+                        }
+                    }
+        }
+        for(int i=0; i<areaCount.length; i++){
+            areasPercentages[i] = (percentage * areaCount[i]) / ppoSize;
+        }
+
     }
     
     @Override
@@ -76,8 +97,13 @@ public class ParkingStatistics extends AppCompatActivity implements ParkingEntri
     }
 
     @Override
-    public List<ParkingStatistics> parkingStatisticsList() {
-        return null;
+    public List<String> areasVisited() {
+        return parkingDistinctValuesList;
+    }
+
+    @Override
+    public double[] areaPercentages() {
+        return areasPercentages;
     }
 
 

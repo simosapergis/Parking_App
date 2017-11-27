@@ -11,21 +11,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sapergis.parking.StartActivity">
 
-    <Button
-        android:id="@+id/configBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Config"
-        />
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
+
 
     <TextView
         android:id="@+id/distance_text"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/configBtn"
         android:layout_centerHorizontal="true"
         android:text="@string/distance_from_vehicle"
+        android:textSize="@dimen/medium_text"
+        android:textColor="@color/colorPrimary"
+        android:background="@color/white"
         />
 
     <TextView
@@ -35,13 +39,15 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/distance_text"
         android:layout_toRightOf="@+id/distance_text"
-        android:layout_below="@+id/configBtn"
+        android:textSize="@dimen/medium_text"
+        android:textColor="@color/colorAccent"
+        android:background="@color/white"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|right"
+        android:gravity="bottom|center"
         >
 
         <android.support.design.widget.FloatingActionButton
@@ -56,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@mipmap/ic_car" />
+            app:srcCompat="@mipmap/ic_statistics_round" />
     </LinearLayout>
 
 </RelativeLayout>

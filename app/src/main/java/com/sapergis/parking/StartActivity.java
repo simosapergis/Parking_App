@@ -30,8 +30,22 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.internal.IGoogleMapDelegate;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.List;
@@ -48,7 +62,7 @@ import interfaces.ParkingDialogInterface;
 import objects.ParkingPositionObject;
 
 public class StartActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback
-                                                                , ParkingDialogInterface{
+                                                                , ParkingDialogInterface, OnMapReadyCallback{
 
     private final long UPDATE_INTERVAL = 10 * 1000;  /* 10 seconds */
     private final long FASTEST_INTERVAL = 2000; /* 2 seconds*/
@@ -56,7 +70,9 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
 
     private final int REQUEST_PREFERENCES_SETUP = 1;
     private final int REQUEST_ACCESS_FINE_LOCATION = 10;
-
+    private final String TEST_DATA_USERNAME = "s_apergis";
+    private final String NULL_USERNAME = "nullUsername";
+    private final String METERS_SIGN = "m";
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private FloatingActionButton getParkingPos;
@@ -66,10 +82,14 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     private TextView distance_text2;
     private boolean vehicleParked;
     private String current_username;
-    private final String NULL_USERNAME = "nullUsername";
     SharedPreferences sharedPreferences;
     private Location parkedLocation = null;
     private LocationCallback mLocationCallback;
+    private SupportMapFragment mapFragment;
+    private GoogleMap map;
+    private Marker parkedVehicleMarker, currentPositionMarker = null;
+    private BitmapDescriptor bitmapDescriptor;
+    MarkerOptions userMarkerOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +121,6 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         if(mFusedLocationClient!=null && mLocationCallback!=null){
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
-
 
     }
 
@@ -164,7 +183,10 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
      *method to set up the UI elements of the activity
      */
     private void setUpViews(){
-        getParkingPos = (FloatingActionButton) findViewById(R.id.getParkingPosBtn);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        getParkingPos = findViewById(R.id.getParkingPosBtn);
         getParkingPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,25 +208,22 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                 return false;
             }
         });
-        config = (Button) findViewById(R.id.configBtn);
-        config.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StartActivity.this, SetupConfigActivity.class);
-                startActivity(intent);
-            }
-        });
-        stats = (FloatingActionButton) findViewById(R.id.statsBtn);
+        stats = findViewById(R.id.statsBtn);
         stats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StartActivity.this , ParkingStatistics.class);
+                Intent intent = new Intent(StartActivity.this , ParkingStatisticsActivity.class);
                 intent.putExtra(Helper.CURRENT_USERNAME , current_username);
                 startActivity(intent);
             }
         });
         distance_text1 = (TextView)findViewById(R.id.distance_text);
         distance_text2 = (TextView)findViewById(R.id.distance_text2);
+        bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user2_round);
+        userMarkerOptions = new MarkerOptions()
+                .title(getResources().getString(R.string.your_location))
+                .icon(bitmapDescriptor)
+                ;
     }
 
     /**
@@ -237,7 +256,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                     StoreToDatabase.storePosition(parkingPositionObject , writableDatabase);
                 }
                 DeleteFromDatabase.deleteTempPosition(this);
-                Toast.makeText(this, R.string.parking_pos_record_stored_, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.parked_vehicle_reached, Toast.LENGTH_LONG).show();
                 closeWritableDatabase(writableDatabase);
                 vehicleParked = false;
             }else{
@@ -311,32 +330,53 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         parkingPositionObj.setVehicle(sharedPreferences.getString(Helper.PREF_VEHICLE, null));
         Log.d(Helper.TAG , "datetime -> "+datetime +" area -> "+ area +" address -> "+parked_address +" no-> "+parked_address_no);
         parkedLocation = location;
+        showParkedVehiclePositionOnMap(parkedLocation);
         SQLiteDatabase writableDatabase = openWritableDatabase();
         StoreToDatabase.storeTempPosition(parkingPositionObj , writableDatabase);
         closeWritableDatabase(writableDatabase);
         vehicleParked = true;
+        Toast.makeText(this,R.string.vehicle_parked, Toast.LENGTH_LONG).show();
     }
 
     /**
      * method to get location changes passed from requestLocationUpdates.
      */
     private void onLocationChanged(Location location){
+        if(currentPositionMarker!=null){
+            currentPositionMarker.remove();
+        }
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        userMarkerOptions.position(latLng);
+        currentPositionMarker = map.addMarker(userMarkerOptions);
+        currentPositionMarker.showInfoWindow();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                latLng, Helper.STREETS_ZOOM));
         Float distanceFromVehicle = null;
         Log.d(Helper.TAG,"Location Changed To -> lat:"+ location.getLatitude()+ " lon:"+ location.getLongitude() +" acc:"+ location.getAccuracy());
-        //LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
         if(vehicleParked){
-            if( ! (distance_text1.getVisibility()== View.VISIBLE  && distance_text2.getVisibility() == View.VISIBLE) ){
-                //TODO need UI change
-                distance_text1.setVisibility(View.VISIBLE);
-                distance_text2.setVisibility(View.VISIBLE);
-            }
             distanceFromVehicle = location.distanceTo(parkedLocation);
-            distance_text2.setText(String.valueOf(distanceFromVehicle));
+            StringBuffer sb = new StringBuffer();
+            sb.append(String.format("%.2f",distanceFromVehicle)).append(METERS_SIGN);
+            distance_text2.setText(sb);
             Log.d(Helper.TAG , "Distance from your vehicle -> "+distanceFromVehicle);
+            showDistanceText();
+        }else {
+            hideDistanceText();
+            if (parkedVehicleMarker != null) {
+                parkedVehicleMarker.remove();
+            }
         }
-
     }
 
+    private void showParkedVehiclePositionOnMap(Location location){
+        LatLng current_location = new LatLng(location.getLatitude(), location.getLongitude());
+        map.getUiSettings().setMyLocationButtonEnabled(true);
+        parkedVehicleMarker = map.addMarker(new MarkerOptions().position(current_location)
+                .title(getResources().getString(R.string.parked_vehicle_marker)));
+        parkedVehicleMarker.showInfoWindow();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                current_location, Helper.STREETS_ZOOM));
+    }
     /**
      * method to check if location permissions are granted
      */
@@ -387,6 +427,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     private void retrieveFromFirebase(){
         FireBaseTestData testDataList = new FireBaseTestData(this);
         testDataList.requestTestListFromFireBase();
+        current_username = TEST_DATA_USERNAME;
     }
 
     /**
@@ -399,4 +440,24 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
         FireBaseTestData testDataList = new FireBaseTestData(this);
         testDataList.postTestListToFireBase(entries);
     }
+
+    private void showDistanceText(){
+        if( ! (distance_text1.getVisibility()== View.VISIBLE  && distance_text2.getVisibility() == View.VISIBLE) ){
+            distance_text1.setVisibility(View.VISIBLE);
+            distance_text2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideDistanceText(){
+        if( distance_text1.getVisibility()== View.VISIBLE  && distance_text2.getVisibility() == View.VISIBLE){
+            distance_text1.setVisibility(View.GONE);
+            distance_text2.setVisibility(View.GONE);
+        }
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+    }
+
 }

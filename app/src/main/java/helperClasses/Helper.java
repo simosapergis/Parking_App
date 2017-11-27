@@ -14,4 +14,10 @@ public class Helper {
     public static final String N_A = "N/A";
     public static final String DATE_PATTERN = "dd-MM-yyyy";
     public static final String TIME_PATTERN = "HH:mm";
+    public static final float BUILDINGS_ZOOM= 20f;
+    public static final float STREETS_ZOOM= 15f;
+    public static final float CITY_ZOOM= 10f;
+    public static final float CONTINENT_ZOOM= 5f;
+    public static final float WORLD_ZOOM= 1f;
+    public static final float ZERO_ZOOM = 0f;
 }
