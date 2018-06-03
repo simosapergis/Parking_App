@@ -54,8 +54,8 @@ public class FireBaseTestData {
                   ParkingPositionObject ppo = firebaseEntry.getValue(ParkingPositionObject.class);
                   testEntries.add(ppo);
               }
-              SQLiteDatabase readableDatabase = new ParkingDBHelper(context).getWritableDatabase();
-              StoreToDatabase.storeFirebaseTestData(testEntries , readableDatabase);
+              ParkingDBHelper parkingDBHelper = ParkingDBHelper.getParkingDBHelperInstance(context);
+              parkingDBHelper.storeFirebaseTestData(testEntries);
           }
 
           @Override

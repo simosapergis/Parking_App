@@ -1,7 +1,8 @@
 <resources>
     <!--Generic -->
     <string name="app_name">Parking Application</string>
-    <string name="google_maps_key"> AIzaSyAJVRO1um1UAqCC6J3PRce2vyaYpbaTkj0 </string>
+    <string name="google_maps_key"> AIzaSyCwaaQzk7caoJM6haOZPYVb527wMz_I3ds</string>
+    <string name="google_maps_key_browser">AIzaSyDm3t62Vy6gSnS5RFnJjFJsWSUTedWzAIc</string>
     <string name="done">Done</string>
     <string name="en_US">en_US</string>
     <string name="el_GR">el_GR</string>
@@ -14,18 +15,26 @@
     <string name="error_on_getting_gps_last_loc">Error trying to get last GPS location</string>
     <string name="error_reading_from_firebase">Failed to read from Firebase Database</string>
 
+    <!--Database-->
+    <string name="error_on_store">Error on storing parking position entry</string>
+    <string name="error_on_delete">Error on deleting parking position entry</string>
+    <string name="error_on_retrieve">Error on retrieving parking position entry</string>
+    <string name="error_on_retrieving_all">Error on retrieving all entries</string>
+
     <!--Setup config -->
+    <string name="locale_en">EN</string>
+    <string name="locale_gr">GR</string>
     <string name="username_hint">Username</string>
     <string name="please_enter_username">Please enter a username</string>
     <string name="vehicle">Vehicle</string>
     <string name="store_parking_records">Store parking record</string>
+    <string name="console_logs">Allow Console Logs</string>
     <string name="select_vehicle">Select vehicle</string>
     <string-array name="vehicles_list">
+        <item>Select vehicle</item>
         <item>Car</item>
         <item>Bike</item>
         <item>Long Vehicle</item>
-        <item>Enter</item>
-        <item>Select vehicle</item>
     </string-array>
 
     <!--StartActivity-->
@@ -53,4 +62,8 @@
     <!--Menu-->
     <string name="go_to_settings">Settings</string>
     <string name="add_data">Add Test Data</string>
+
+    <!--Notification-->
+    <string name="channel_name">Simos</string>
+    <string name="channel_discription">this is the discription</string>
 </resources>

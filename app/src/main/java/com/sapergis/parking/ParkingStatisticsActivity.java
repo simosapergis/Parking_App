@@ -65,11 +65,10 @@ public class ParkingStatisticsActivity extends AppCompatActivity implements Park
     }
 
     private void  loadFromDb() {
-        SQLiteDatabase readableDatabase = new ParkingDBHelper(this).getWritableDatabase();
-        parkingEntriesList = RetrieveFromDatabase.retrieveAllEntries(readableDatabase , current_username);
-        parkingDistinctValuesList = RetrieveFromDatabase.retrieveStatistics(readableDatabase, current_username);
+        ParkingDBHelper parkingDBHelper = ParkingDBHelper.getParkingDBHelperInstance(this);
+        parkingEntriesList = parkingDBHelper.retrieveAllParkingEntries(current_username);
+        parkingDistinctValuesList = parkingDBHelper.retrieveStatistics(current_username);
         calculateStatistics(parkingEntriesList,  parkingDistinctValuesList);
-        readableDatabase.close();
     }
 
     private void calculateStatistics(List<ParkingPositionObject> ppoList, List <String> pdvList){
