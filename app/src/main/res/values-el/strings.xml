@@ -1,6 +1,6 @@
 <resources>
     <!--Generic -->
-    <string name="app_name">Parking Application</string>
+    <string name="app_name">Εφαρμογή Παρκαρίσματος</string>
     <string name="google_maps_key"> AIzaSyAJVRO1um1UAqCC6J3PRce2vyaYpbaTkj0 </string>
     <string name="done">Εντάξει</string>
     <string name="en_US">en_US</string>
@@ -12,6 +12,7 @@
     <string name="parked_vehicle_reached">Φτάσατε στο όχημα σας. Οδηγήστε με ασφάλεια!</string>
     <string name="parking_pos_released">Η τελευταία θέση παρκαρίσματος, αποδεσμεύτηκε.</string>
     <string name="error_on_getting_gps_last_loc">Σφάλμα κατά τον εντοπισμό της τελετευταίας θέσης σας απο το GPS</string>
+    <string name="error_deleting_last_loc_from_db">Σφάλμα κατά την διαγραφή θέσης παρκαρίσματος.</string>
     <string name="error_reading_from_firebase">Σφάλμα κατά την ανάγνωση απο την βάση δεδομένων Firebase</string>
 
     <!--Database-->
@@ -25,23 +26,30 @@
     <string name="locale_gr">ΕΛ</string>
     <string name="username_hint">Όνομα Χρήστη</string>
     <string name="please_enter_username">Παρακαλώ εισάγετε όνομα χρήστη</string>
+    <string name="please_select_vehicle">Παρακαλώ επιλέξτε όχημα</string>
     <string name="vehicle">Όχημα</string>
     <string name="store_parking_records">Αποθήκευση θέσεων παρκαρίσματος</string>
     <string name="console_logs">Αρχεία καταγραφής στην κονσόλα</string>
     <string name="select_vehicle">Επιλέξτε όχημα</string>
     <string-array name="vehicles_list">
-        <item>Επιλέξτε όχημα</item>
         <item>Αυτοκίνητο</item>
         <item>Μοτοσυκλέτα</item>
+        <item>Ποδήλατο</item>
         <item>Μακρύ όχημα</item>
+    </string-array>
+    <string-array name="languages_list">
+        <item>Αγγλικά</item>
+        <item>Ελληνικά</item>
     </string-array>
 
     <!--StartActivity-->
     <string name="distance_from_vehicle">Απόσταση από το όχημα: </string>
+    <string name="moving_speed">Ταχύτητα</string>
     <string name="parking_button">Πλήκτρο Παρκαρίσματος</string>
     <string name="vehicle_parked">Παρκάρατε το όχημα! Η θέση σας έχει αποθηκευτεί.</string>
     <string name="parked_vehicle_marker">Θέση του οχήματος σας</string>
     <string name="your_location">Τρέχουσα θέση σας</string>
+    <string name="no_parked_vehicle">Δεν έχετε παρκαρισμένο όχημα</string>
 
     <!--Alert dialog -->
     <string name="welcome_text">Καλώς ήρθατε στην εφαρμογή Parking! Παρακαλώ ελέγξτε τις ρυθμίσεις σας</string>
@@ -53,6 +61,10 @@
     <string name="no">Όχι</string>
     <string name="title_activity_parking_statistics">ParkingStatistics</string>
 
+    <!--Pop up-->
+    <string name="go_to_parked_vehicle">Όχημα</string>
+    <string name="go_to_my_current_location">Τοποθεσία</string>
+
     <!--ParkingStatistics-->
     <string name="parked_at"> Θέση παρκαρίσματος  </string>
     <string name="tab_overall">Όλες οι θέσεις</string>
@@ -63,6 +75,9 @@
     <string name="add_data">Κατεβάστε δεδομένα δοκιμής</string>
 
     <!--Notification-->
-    <string name="channel_name">Simos</string>
-    <string name="channel_discription">this is the discription</string>
+    <string name="channel_discription">Βρήκαμε μια πιθανή θέση για παρκάρισμα, με βάση το ιστορικό παρκαρίσματός σας.</string>
+
+    <!--General Error-->
+    <string name="general_error">Παρουσιάστηκε σφάλμα. Παρακαλώ δοκιμάστε ξανά.</string>
+
 </resources>

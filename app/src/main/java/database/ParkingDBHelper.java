@@ -64,7 +64,8 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
     CRUD operations below : Store - Retrieve - Delete
      */
 
-    public void storeParkingPosition(ParkingPositionObject ppo, boolean temporaryPosition){
+    public long storeParkingPosition(ParkingPositionObject ppo, boolean temporaryPosition){
+        long result = -1;
         SQLiteDatabase database = instance.getWritableDatabase();
         database.beginTransaction();
         try {
@@ -78,7 +79,7 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
                 values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_ADDRESS_PARKED , ppo.getParked_address());
                 values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_ADDRESS_PARKED_NO , ppo.getParked_address_no());
                 values.put(ParkingLocationDBContract.TempParkingLocation.COLUMN_VEHICLE , ppo.getVehicle());
-                long result = database.insert(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME , null, values);
+                result = database.insert(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME , null, values);
                 database.setTransactionSuccessful();
             }else{
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME, ppo.getUsername());
@@ -89,17 +90,18 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED , ppo.getParked_address());
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED_NO , ppo.getParked_address_no());
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE , ppo.getVehicle());
-                long result = database.insert(ParkingLocationDBContract.ParkingLocation.TABLE_NAME , null, values);
+                result = database.insert(ParkingLocationDBContract.ParkingLocation.TABLE_NAME , null, values);
                 database.setTransactionSuccessful();
             }
-
+            return result;
         }
         catch(Exception ex){
-            Log.e(Helper.TAG, sContext.getResources().getString(R.string.error_on_store));
+            printErrorsToConsole(ex ,sContext.getResources().getString(R.string.error_on_store));
         }
         finally {
             database.endTransaction();
         }
+        return result;
     }
 
     public  void storeFirebaseTestData(List<ParkingPositionObject> entries){
@@ -116,10 +118,11 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED , ppo.getParked_address());
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_ADDRESS_PARKED_NO , ppo.getParked_address_no());
                 values.put(ParkingLocationDBContract.ParkingLocation.COLUMN_VEHICLE , ppo.getVehicle());
-                database.insert(ParkingLocationDBContract.ParkingLocation.TABLE_NAME , null, values);
+                long result = database.insert(ParkingLocationDBContract.ParkingLocation.TABLE_NAME , null, values);
             }
+            database.setTransactionSuccessful();
         }catch(Exception ex){
-            Log.e(Helper.TAG, sContext.getResources().getString(R.string.error_on_store));
+            printErrorsToConsole(ex ,sContext.getResources().getString(R.string.error_on_store));
         }finally {
             database.endTransaction();
         }
@@ -147,50 +150,56 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         parkingPositionObj=fetchObject(cursor, temporaryPosition);
+
         cursor.close();
         return parkingPositionObj;
     }
 
 
-    public List<ParkingPositionObject> retrieveAllParkingEntries (String userName){
+    public List<ParkingPositionObject> retrieveAllParkingEntries (String ...userNames){
         ArrayList<ParkingPositionObject> allParkingEntries = new ArrayList<>();
         SQLiteDatabase database = instance.getReadableDatabase();
         String selection = ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME +" = ?";
-        String [] selectionArgs = {userName};
-        Cursor cursor = database.query(
-                ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
-                columnsToRetrieve,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
+        for(String userName : userNames){
+            String [] selectionArgs = {userName};
+            Cursor cursor = database.query(
+                    ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
+                    columnsToRetrieve,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
 
-        cursor.moveToFirst();
-        int counter = 0;
-        int count =cursor.getCount();
-        while(counter < count){
-            allParkingEntries.add(fetchObject(cursor, false));
-            counter++;
-            cursor.moveToNext();
+            cursor.moveToFirst();
+            int counter = 0;
+            int count =cursor.getCount();
+            while(counter < count){
+                allParkingEntries.add(fetchObject(cursor, false));
+                counter++;
+                cursor.moveToNext();
+            }
+
+            cursor.close();
         }
 
-        cursor.close();
         return allParkingEntries;
     }
-    public  void deleteTempPosition(Context context){
+    public long deleteTempPosition(Context context){
+        long result = -1;
         SQLiteDatabase database = instance.getWritableDatabase();
         database.beginTransaction();
         try{
-            database.delete(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME, null, null  );
+            result = database.delete(ParkingLocationDBContract.TempParkingLocation.TABLE_NAME, null, null  );
+            database.setTransactionSuccessful();
         }catch(Exception ex){
             Log.e(Helper.TAG, sContext.getResources().getString(R.string.error_on_delete));
             Log.e(Helper.TAG, ex.toString());
         }finally{
             database.endTransaction();
         }
-
+        return result;
     }
 
     /*
@@ -260,29 +269,33 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
         return parkingPositionObj;
     }
 
-    public List<String> retrieveStatistics (String userName) {
+    public List<String> retrieveStatistics (String ...userNames) {
         SQLiteDatabase readableDatabase = instance.getReadableDatabase();
         readableDatabase.beginTransaction();
         ArrayList<String> statistics = new ArrayList<>();
         String selection = ParkingLocationDBContract.ParkingLocation.COLUMN_USERNAME + " = ?";
         String column = ParkingLocationDBContract.ParkingLocation.COLUMN_AREA;
-        String[] selectionArgs = {userName};
-        try{
-            Cursor cursor = readableDatabase.query(
-                    true,
-                    ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
-                    columnsToRetrieve, selection, selectionArgs, column, null, null, null
-            );
 
-            cursor.moveToFirst();
-            int counter = 0;
-            int count =cursor.getCount();
-            while (counter < count) {
-                statistics.add(cursor.getString(cursor.getColumnIndexOrThrow(column)));
-                counter++;
-                cursor.moveToNext();
+
+        try{
+            for(String userName : userNames) {
+                String[] selectionArgs = {userName};
+                Cursor cursor = readableDatabase.query(
+                        true,
+                        ParkingLocationDBContract.ParkingLocation.TABLE_NAME,
+                        columnsToRetrieve, selection, selectionArgs, column, null, null, null
+                );
+
+                cursor.moveToFirst();
+                int counter = 0;
+                int count = cursor.getCount();
+                while (counter < count) {
+                    statistics.add(cursor.getString(cursor.getColumnIndexOrThrow(column)));
+                    counter++;
+                    cursor.moveToNext();
+                }
+                cursor.close();
             }
-            cursor.close();
         }catch(Exception ex){
             Log.e(Helper.TAG, ex.toString());
         }finally {
@@ -290,5 +303,9 @@ public class ParkingDBHelper extends SQLiteOpenHelper {
         }
 
         return statistics;
+    }
+
+    private void printErrorsToConsole(Exception exception , String description){
+        Log.e(Helper.TAG, description+"\n"+exception.toString());
     }
 }

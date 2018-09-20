@@ -1,22 +1,19 @@
 package com.sapergis.parking;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import java.util.List;
 
 
 import adapters.MyPagerAdapter;
 import database.ParkingDBHelper;
-import database.RetrieveFromDatabase;
 import helperClasses.Helper;
 import interfaces.ParkingEntriesInterface;
 import objects.ParkingPositionObject;
 
-public class ParkingStatisticsActivity extends AppCompatActivity implements ParkingEntriesInterface {
+public class ParkingStatisticsActivity extends ParentActivity implements ParkingEntriesInterface {
 
     List<ParkingPositionObject> parkingEntriesList;
     List<String> parkingDistinctValuesList;
@@ -66,8 +63,8 @@ public class ParkingStatisticsActivity extends AppCompatActivity implements Park
 
     private void  loadFromDb() {
         ParkingDBHelper parkingDBHelper = ParkingDBHelper.getParkingDBHelperInstance(this);
-        parkingEntriesList = parkingDBHelper.retrieveAllParkingEntries(current_username);
-        parkingDistinctValuesList = parkingDBHelper.retrieveStatistics(current_username);
+        parkingEntriesList = parkingDBHelper.retrieveAllParkingEntries(current_username, Helper.TEST_DATA_USERNAME);
+        parkingDistinctValuesList = parkingDBHelper.retrieveStatistics(current_username, Helper.TEST_DATA_USERNAME);
         calculateStatistics(parkingEntriesList,  parkingDistinctValuesList);
     }
 

@@ -13,6 +13,7 @@
     <string name="parked_vehicle_reached">Parked vehicle reached! Drive safe</string>
     <string name="parking_pos_released">Your last parking position has been released</string>
     <string name="error_on_getting_gps_last_loc">Error trying to get last GPS location</string>
+    <string name="error_deleting_last_loc_from_db">Error deleting your last parking position.</string>
     <string name="error_reading_from_firebase">Failed to read from Firebase Database</string>
 
     <!--Database-->
@@ -26,23 +27,30 @@
     <string name="locale_gr">GR</string>
     <string name="username_hint">Username</string>
     <string name="please_enter_username">Please enter a username</string>
+    <string name="please_select_vehicle">Please select vehicle</string>
     <string name="vehicle">Vehicle</string>
-    <string name="store_parking_records">Store parking record</string>
+    <string name="store_parking_records">Store parking records</string>
     <string name="console_logs">Allow Console Logs</string>
     <string name="select_vehicle">Select vehicle</string>
     <string-array name="vehicles_list">
-        <item>Select vehicle</item>
         <item>Car</item>
-        <item>Bike</item>
+        <item>MotorBike</item>
+        <item>Bicycle</item>
         <item>Long Vehicle</item>
+    </string-array>
+    <string-array name="languages_list">
+        <item>English</item>
+        <item>Greek</item>
     </string-array>
 
     <!--StartActivity-->
     <string name="distance_from_vehicle">Distance from your vehicle: </string>
+    <string name="moving_speed">Speed</string>
     <string name="parking_button">Parking Button</string>
     <string name="vehicle_parked">Vehicle parked! Parking position stored</string>
     <string name="parked_vehicle_marker">Your parked vehicle</string>
     <string name="your_location">Your location</string>
+    <string name="no_parked_vehicle">Your vehicle is not parked</string>
 
     <!--Alert dialog -->
     <string name="welcome_text">Welcome to Parking app! Please set up your preferences</string>
@@ -54,6 +62,10 @@
     <string name="no">No</string>
     <string name="title_activity_parking_statistics">ParkingStatistics</string>
 
+    <!--Pop up-->
+    <string name="go_to_parked_vehicle">Vehicle</string>
+    <string name="go_to_my_current_location">My Location</string>
+
     <!--ParkingStatistics-->
     <string name="parked_at"> parked at </string>
     <string name="tab_overall">Overall</string>
@@ -64,6 +76,9 @@
     <string name="add_data">Add Test Data</string>
 
     <!--Notification-->
-    <string name="channel_name">Simos</string>
-    <string name="channel_discription">this is the discription</string>
+    <string name="channel_discription">We found a possible parking place for you based on your parking history.</string>
+
+    <!--General Error-->
+    <string name="general_error">There was an error during this operation. Please try again.</string>
+
 </resources>

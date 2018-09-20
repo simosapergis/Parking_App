@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.ParkingDBHelper;
-import database.ParkingLocationDBContract;
-import database.StoreToDatabase;
 import objects.ParkingPositionObject;
 
 public class FireBaseTestData {
