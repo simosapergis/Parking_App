@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@color/white"
     android:focusable="true"
     android:clickable="true"
     android:paddingBottom="@dimen/row_padding_vertical"
@@ -18,18 +18,27 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/large_text"
 
         />
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_date"
+        android:textAlignment="center"
+        />
+
 
     <TextView
         android:id="@+id/text_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_date"
+        android:layout_below="@+id/text_time"
         android:textAlignment="center"
+        android:textSize="@dimen/medium_text"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="@string/parked_at"
+
         />
     <TextView
         android:id="@+id/text_area"
@@ -38,5 +47,7 @@
         android:layout_below="@+id/text_address"
         android:textAlignment="center"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/medium_text"
+
         />
 </RelativeLayout>

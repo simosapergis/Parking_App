@@ -15,7 +15,7 @@ public final class ParkingLocationDBContract {
         public static final String COLUMN_DATETIME = "datetime";
         public static final String COLUMN_AREA  = "area";
         public static final String COLUMN_ADDRESS_PARKED = "address";
-        public static final String COLUMN_ADDRESS_PARKED_NO="address number";
+        public static final String COLUMN_ADDRESS_PARKED_NO="address_number";
         public static final String COLUMN_VEHICLE  = "vehicle";
 
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
@@ -27,7 +27,7 @@ public final class ParkingLocationDBContract {
                 COLUMN_DATETIME + " INTEGER, "+
                 COLUMN_AREA + " TEXT, " +
                 COLUMN_ADDRESS_PARKED + " TEXT, "+
-                COLUMN_ADDRESS_PARKED_NO + " TEXT "+
+                COLUMN_ADDRESS_PARKED_NO + " TEXT, "+
                 COLUMN_VEHICLE +" TEXT )";
     }
 
@@ -39,7 +39,7 @@ public final class ParkingLocationDBContract {
         public static final String COLUMN_DATETIME = "datetime";
         public static final String COLUMN_AREA  = "area";
         public static final String COLUMN_ADDRESS_PARKED = "address";
-        public static final String COLUMN_ADDRESS_PARKED_NO="address number";
+        public static final String COLUMN_ADDRESS_PARKED_NO="address_number";
         public static final String COLUMN_VEHICLE  = "vehicle";
 
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
@@ -51,7 +51,7 @@ public final class ParkingLocationDBContract {
                 COLUMN_DATETIME + " INTEGER, "+
                 COLUMN_AREA + " TEXT, " +
                 COLUMN_ADDRESS_PARKED + " TEXT, "+
-                COLUMN_ADDRESS_PARKED_NO + " TEXT "+
+                COLUMN_ADDRESS_PARKED_NO + " TEXT, "+
                 COLUMN_VEHICLE +" TEXT )";
     }
 
